@@ -1,0 +1,24 @@
+[
+  {
+    "type": "TOSS-UP",
+    "category": "Food & Drink",
+    "phrase": "LEMONDAGEE",
+    "prize_value": 1.00
+  },
+  {
+    "type": "MAIN",
+    "category": "Person",
+    "phrase": "ALBERT EINSTEIN"
+  },
+  {
+    "type": "TOSS-UP",
+    "category": "Place",
+    "phrase": "GRAND CANYON",
+    "prize_value": 2.50
+  },
+  {
+    "type": "MAIN",
+    "category": "Thing",
+    "phrase": "ROLLING STONE"
+  }
+]
