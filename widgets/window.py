@@ -74,11 +74,11 @@ class GameWindow(QtWidgets.QMainWindow):
             key = event.key()
 
             # Debug print (keeps your existing helper)
-            try:
-                self._debug_print_keypress(event)
-            except Exception:
-                # keep robust if debug helper isn't present for some reason
-                print(f"DEBUG: KeyPress code={key}", flush=True)
+            # try:
+            #     self._debug_print_keypress(event)
+            # except Exception:
+            #     # keep robust if debug helper isn't present for some reason
+            #     print(f"DEBUG: KeyPress code={key}", flush=True)
 
             # Accept both the Qt constants and the numeric codes your remote sends
             up_codes = {QtCore.Qt.Key_Up, PRESENTER_KEY_UP}
