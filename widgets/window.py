@@ -511,9 +511,7 @@ class GameWindow(QtWidgets.QMainWindow):
         [x.setEnabled(False) for x in self.letter_buttons.values()]
         self.sounds.play("TOSS-UP", loop=True)
         reveal_count: int = max(1, int(len(self.board.correct_letters) * 0.2))
-        choices: list[str] = [
-            c for c in self.board.correct_letters if c not in set("AEIOU")
-        ]
+        choices: list[str] = [c for c in self.board.correct_letters]
         random.shuffle(choices)
         for c in choices[:reveal_count]:
             self.board.revealed.add(c)
