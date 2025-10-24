@@ -6,7 +6,7 @@ from widgets import GameWindow
 def main() -> None:
     app = QtWidgets.QApplication(sys.argv)
     w = GameWindow()
-    w.show()
+    w.showMaximized()
     sys.exit(app.exec())
 
 

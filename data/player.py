@@ -6,21 +6,21 @@ class Player:
     name: str
     round_score: float = 0.0
     total_score: float = 0.0
-    has_spun = False
+    has_spun: bool = False
 
     def set_bankrupt(self) -> None:
         self.round_score = 0.0
 
-    def set_money(self, amount) -> None:
+    def set_money(self, amount: float) -> None:
         self.round_score = amount
 
-    def add_money(self, amount) -> None:
+    def add_money(self, amount: float) -> None:
         self.round_score += amount
 
     def add_total_money(self) -> None:
         self.total_score += self.round_score
 
-    def set_total_money(self, amount) -> None:
+    def set_total_money(self, amount: float) -> None:
         self.total_score = amount
 
 
@@ -31,5 +31,5 @@ class Players:
     def get_players(self) -> list[Player]:
         return self.players
 
-    def get_player(self, name) -> Player:
+    def get_player(self, name: str) -> Player:
         return next([player for player in self.players if player.name == name])

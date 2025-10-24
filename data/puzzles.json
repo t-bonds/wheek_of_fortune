@@ -3,22 +3,43 @@
     "type": "TOSS-UP",
     "category": "Food & Drink",
     "phrase": "LEMONDAGEE",
-    "prize_value": 1.00
+    "prize_value": 1.0
   },
   {
     "type": "MAIN",
-    "category": "Person",
-    "phrase": "ALBERT EINSTEIN"
+    "category": "Quotes",
+    "phrase": "\"IT'S PERFECTLY FINE IF A DOG LICKS YOUR VAGINA AS LONG AS THERE'S NO PEANUT BUTTER ON IT.\""
   },
   {
     "type": "TOSS-UP",
-    "category": "Place",
-    "phrase": "GRAND CANYON",
-    "prize_value": 2.50
+    "category": "Same Letter",
+    "phrase": "FREAKY FEMBOY FRIDAY",
+    "prize_value": 2.5
   },
   {
     "type": "MAIN",
-    "category": "Thing",
-    "phrase": "ROLLING STONE"
+    "category": "Best Sellers",
+    "phrase": "THE LION, THE WITCH, AND THE ROWDROBE"
+  },
+  {
+    "type": "TOSS-UP",
+    "category": "Quotes",
+    "phrase": "MRS. PIGGY'S A TEN! A TEN! SHE'S A TEN!",
+    "prize_value": 5.0
+  },
+  {
+    "type": "MAIN",
+    "category": "Place",
+    "phrase": "SLIPKNOT APPLEBEE'S"
+  },
+  {
+    "type": "FINAL SPIN",
+    "category": "On My Playlist",
+    "phrase": "MEET THE GRAHAMS"
+  },
+  {
+    "type": "BONUS ROUND",
+    "category": "Famous Figures",
+    "phrase": "MARCUS PUMPKIN"
   }
 ]

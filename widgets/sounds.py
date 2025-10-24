@@ -36,6 +36,8 @@ class SoundsManager:
             "THEME": SOUNDS_DIR / "THEME.mp3",
             "TOSS-UP_SOLVE": SOUNDS_DIR / "TOSS-UP_SOLVE.mp3",
             "TOSS-UP": SOUNDS_DIR / "TOSS-UP.mp3",
+            "FINAL_SPIN": SOUNDS_DIR / "FINAL_SPIN.mp3",
+            "SPEED_UP": SOUNDS_DIR / "SPEED_UP.mp3",
             "BEEP": SOUNDS_DIR / "BEEP.wav",
         }
         return files
