@@ -67,17 +67,16 @@ class GameWindow(QtWidgets.QMainWindow):
         self.show_setup_dialog()
 
     # -------------------------
-    # Event filter for Up/Down (only when window is active)
+    # Event filter for Up/Down
     # -------------------------
     def eventFilter(self, obj, event) -> bool:
         if event.type() == QtCore.QEvent.KeyPress:
             key = event.key()
 
-            # Debug print (keeps your existing helper)
+            # Debug print
             # try:
             #     self._debug_print_keypress(event)
             # except Exception:
-            #     # keep robust if debug helper isn't present for some reason
             #     print(f"DEBUG: KeyPress code={key}", flush=True)
 
             # Accept both the Qt constants and the numeric codes your remote sends
@@ -239,7 +238,7 @@ class GameWindow(QtWidgets.QMainWindow):
         letters_group.setLayout(grid)
         center_v.addWidget(letters_group)
 
-        # Host solve adjudication buttons (no textual entry)
+        # Host solve adjudication buttons
         solve_h: QtWidgets.QHBoxLayout = QtWidgets.QHBoxLayout()
         self.solve_btn: QtWidgets.QPushButton = QtWidgets.QPushButton("Solve")
         self.solve_btn.clicked.connect(self.solve_button_action)
@@ -267,7 +266,7 @@ class GameWindow(QtWidgets.QMainWindow):
         self.players_list_widget: QtWidgets.QVBoxLayout = QtWidgets.QVBoxLayout()
         right_v.addLayout(self.players_list_widget)
 
-        # Admin override controls (select player, set money, undo)
+        # Admin override controls (select player, set money)
         override_group: QtWidgets.QGroupBox = QtWidgets.QGroupBox(
             "Override Player Score"
         )
@@ -394,7 +393,7 @@ class GameWindow(QtWidgets.QMainWindow):
             sys.exit(0)
 
     # -------------------------
-    # Rebuild & update UI (unchanged except calls to update hint)
+    # Rebuild & update UI
     # -------------------------
     def _rebuild_players_panel(self) -> None:
         # clear layout
@@ -414,7 +413,7 @@ class GameWindow(QtWidgets.QMainWindow):
                 f"Round: {fmt_money(amount=p.round_score)} / Total: {fmt_money(amount=p.total_score)}"
             )
             score_lbl.setObjectName(f"score_{idx}")
-            # Host buzzer button (big) to indicate host wants to select that player
+            # set turn button to indicate host wants to select that player
             set_turn_btn: QtWidgets.QPushButton = QtWidgets.QPushButton("SET TURN")
             set_turn_btn.setProperty("player_index", idx)
             set_turn_btn.setMinimumHeight(36)
@@ -666,11 +665,6 @@ class GameWindow(QtWidgets.QMainWindow):
             f"Turn: {self.players[self.current_player_index].name}"
         )
 
-    # -------------------------
-    # on_letter_selected: minor fixes
-    #  - save start_dlg and start button as attributes
-    #  - ensure COUNTDOWN plays when start_dlg is accepted
-    # -------------------------
     def on_letter_selected(self, ch: str) -> None:
         if ch in self.letter_buttons:
             self.letter_buttons[ch].setEnabled(False)
@@ -821,3 +815,10 @@ class GameWindow(QtWidgets.QMainWindow):
         # Host sets whose turn it is
         self.current_player_index = idx
         self.status_label.setText(f"Turn: {self.players[idx].name}")
+        self.spin_btn.setEnabled(True)
+        self.solve_btn.setEnabled(True)
+        [
+            x.setEnabled(True)
+            for x in self.letter_buttons.values()
+            if x not in self.board.revealed
+        ]
