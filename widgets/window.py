@@ -122,7 +122,6 @@ class GameWindow(QtWidgets.QMainWindow):
         if self._countdown_active:
             if up:
                 self._countdown_active = False
-                self._update_hint()
                 self.solve_and_reveal()
             return True
 
@@ -196,7 +195,7 @@ class GameWindow(QtWidgets.QMainWindow):
             return False
 
     # -------------------------
-    # UI building (adds hint label)
+    # UI building
     # -------------------------
     def _build_ui(self) -> None:
         central: QtWidgets.QWidget = QtWidgets.QWidget()
@@ -293,17 +292,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self.status_label: QtWidgets.QLabel = QtWidgets.QLabel("Status: Setup")
         right_v.addWidget(self.status_label)
 
-        # Hint label (on-screen presenter hint)
-        self.hint_label: QtWidgets.QLabel = QtWidgets.QLabel()
-        self.hint_label.setMinimumHeight(28)
-        self.hint_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.hint_label.setFont(QtGui.QFont("", 10, QtGui.QFont.Bold))
-        # translucent background and rounded look
-        self.hint_label.setStyleSheet(
-            "QLabel { background: rgba(0,0,0,0.6); color: white; padding: 6px; border-radius: 6px; }"
-        )
-        right_v.addWidget(self.hint_label)
-
         right_v.addStretch()
         right_w: QtWidgets.QWidget = QtWidgets.QWidget()
         right_w.setLayout(right_v)
@@ -311,45 +299,8 @@ class GameWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(central)
 
-        # initialize the hint text
-        self._update_hint()
-
-    def _update_hint(self) -> None:
-        """
-        Update the on-screen presenter hint according to current button states
-        and the special COUNTDOWN mode.
-        """
-        up_text = ""
-        down_text = ""
-
-        if self._countdown_active:
-            up_text = "▲ Correct"
-            down_text = "▼ Incorrect"
-        else:
-            if hasattr(self, "spin_btn") and self.spin_btn.isEnabled():
-                up_text = "▲ Spin"
-            elif hasattr(self, "solve_btn") and self.solve_btn.isEnabled():
-                up_text = "▲ Solve"
-            else:
-                up_text = ""
-
-            if hasattr(self, "next_puzzle_btn") and self.next_puzzle_btn.isEnabled():
-                down_text = "▼ Next Puzzle"
-            else:
-                down_text = ""
-
-            if hasattr(self, "start_tossup_btn") and self.start_tossup_btn.isEnabled():
-                down_text = "▲ Start"
-            else:
-                down_text = ""
-
-        parts = [p for p in (up_text, down_text) if p]
-        self.hint_label.setText("   ".join(parts) if parts else "")
-        # hide if empty to reduce clutter
-        self.hint_label.setVisible(bool(parts))
-
     # -------------------------
-    # Setup dialog (unchanged)
+    # Setup dialog
     # -------------------------
     def show_setup_dialog(self) -> None:
         self.sounds.play("THEME", loop=True)
@@ -493,11 +444,8 @@ class GameWindow(QtWidgets.QMainWindow):
         for p in self.players:
             self.override_player_cb.addItem(p.name)
 
-        # refresh on-screen hint after score or button state changes
-        self._update_hint()
-
     # -------------------------
-    # Solve dialog action (unchanged except clearing countdown flag and updating hint)
+    # Solve dialog action)
     # -------------------------
     def solve_button_action(self) -> None:
         if self.current_phase == "TOSS-UP":
@@ -519,7 +467,6 @@ class GameWindow(QtWidgets.QMainWindow):
             if self.current_phase == "FINAL SPIN":
                 self.sounds.play("LETTER_REVEAL")
             self.solve_dlg.show()
-            self._update_hint()
 
     def start_game(self) -> None:
         self.sounds.stop(name="THEME")
@@ -531,7 +478,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self.spin_btn.setEnabled(False)
         self.next_puzzle_btn.setEnabled(False)
         self.solve_btn.setEnabled(False)
-        self._update_hint()
 
         if self.current_phase == "TOSS-UP":
             self.current_player_index = -1
@@ -558,7 +504,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self.start_tossup_btn.clicked.connect(self._start_tossup)
         self.tossup_dlg.setModal(True)
         self.tossup_dlg.show()
-        self._update_hint()
 
     def _start_tossup(self) -> None:
         if self.tossup_dlg.isVisible():
@@ -578,7 +523,6 @@ class GameWindow(QtWidgets.QMainWindow):
         if self._tossup_timer.isActive():
             self._tossup_timer.stop()
         self._tossup_timer.start()
-        self._update_hint()
 
     def _pop_next_puzzle(self) -> Puzzle:
         if not self.puzzles:
@@ -597,17 +541,14 @@ class GameWindow(QtWidgets.QMainWindow):
         for p in self.players:
             p.round_score = 0.0
         self._update_player_scores_ui()
-        self._update_hint()
 
     def _start_final_spin(self) -> None:
         self.spin_btn.setEnabled(True)
         self.sounds.play("FINAL_SPIN")
-        self._update_hint()
 
     def _start_bonus_round(self) -> None:
         self.sounds.play("BONUS_CHOOSE")
         [x.setEnabled(True) for x in self.letter_buttons.values()]
-        self._update_hint()
 
     def tossup_reveal_step(self) -> None:
         # reveal a random unrevealed letter *position* (if any)
@@ -662,7 +603,6 @@ class GameWindow(QtWidgets.QMainWindow):
         incorrect_tossup_btn.clicked.connect(self.incorrect_solve)
         self.pause_dlg.setModal(True)
         self.pause_dlg.show()
-        self._update_hint()
 
     def do_spin(self) -> None:
         # Host initiates a spin on behalf of current player
@@ -671,7 +611,6 @@ class GameWindow(QtWidgets.QMainWindow):
             self.solve_btn.setEnabled(False)
             [x.setEnabled(False) for x in self.letter_buttons.values()]
             self.wheel.spin()
-            self._update_hint()
 
     def on_wheel_result(self, result) -> None:
         wedge: str = result["value"]
@@ -717,7 +656,6 @@ class GameWindow(QtWidgets.QMainWindow):
             if self.current_phase == "FINAL SPIN":
                 self.sounds.play("SPEED_UP")
         self._update_player_scores_ui()
-        self._update_hint()
 
     def _advance_turn(self) -> None:
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
@@ -727,7 +665,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self.status_label.setText(
             f"Turn: {self.players[self.current_player_index].name}"
         )
-        self._update_hint()
 
     # -------------------------
     # on_letter_selected: minor fixes
@@ -767,7 +704,6 @@ class GameWindow(QtWidgets.QMainWindow):
                     self.sounds.stop("BONUS_CHOOSE")
                     self.sounds.play("COUNTDOWN")
                     self._countdown_active = True
-                    self._update_hint()
                 else:
                     # If Cancelled/Rejected, do nothing special
                     pass
@@ -777,13 +713,11 @@ class GameWindow(QtWidgets.QMainWindow):
             self.last_spin_value = None
 
         self._update_player_scores_ui()
-        self._update_hint()
 
     def solve_and_reveal(self) -> None:
         # Host marks the current player's attempt as correct
         # clear countdown flag if set
         self._countdown_active = False
-        self._update_hint()
 
         self.solve_btn.setEnabled(False)
         if (
@@ -813,7 +747,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self._end_round_for_player(self.players[self.current_player_index])
         self._update_player_scores_ui()
         self.next_puzzle_btn.setEnabled(True)
-        self._update_hint()
         if self.current_phase == "FINAL SPIN":
             self.sounds.stop("SPEED_UP")
             top: Player = max(self.players, key=lambda x: x.total_score)
@@ -830,7 +763,6 @@ class GameWindow(QtWidgets.QMainWindow):
     def incorrect_solve(self) -> None:
         # clear countdown flag if set
         self._countdown_active = False
-        self._update_hint()
 
         # Host marks the current player's attempt as incorrect
         if (
@@ -850,7 +782,6 @@ class GameWindow(QtWidgets.QMainWindow):
         else:
             self._advance_turn()
         self._update_player_scores_ui()
-        self._update_hint()
 
     def _resume_tossup_reveal(self) -> None:
         if not self._tossup_timer.isActive():
@@ -875,7 +806,6 @@ class GameWindow(QtWidgets.QMainWindow):
         for p in scores:
             txt += f"{p.name}: {fmt_money(p.total_score)}\n"
         self.status_label.setText("Thanks For Playing!")
-        self._update_hint()
 
     def override_score(self) -> None:
         idx: int = self.override_player_cb.currentIndex()
@@ -886,10 +816,8 @@ class GameWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.information(
             self, "Success", f"{p.name}'s scores updated."
         )
-        self._update_hint()
 
     def host_set_turn(self, idx: int) -> None:
         # Host sets whose turn it is
         self.current_player_index = idx
         self.status_label.setText(f"Turn: {self.players[idx].name}")
-        self._update_hint()
