@@ -726,7 +726,7 @@ class GameWindow(QtWidgets.QMainWindow):
             and self.solve_dlg.isVisible()
         ):
             self.solve_dlg.accept()
-        if self.current_phase == "TOSS-UP":
+        if self.current_phase in {"TOSS-UP", "COUNTDOWN"}:
             self.sounds.stop("TOSS-UP")
             self.sounds.play("TOSS-UP_SOLVE")
             self.players[self.current_player_index].add_money(
