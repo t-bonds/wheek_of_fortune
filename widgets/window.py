@@ -510,12 +510,6 @@ class GameWindow(QtWidgets.QMainWindow):
         self.solve_btn.setEnabled(True)
         [x.setEnabled(False) for x in self.letter_buttons.values()]
         self.sounds.play("TOSS-UP", loop=True)
-        reveal_count: int = max(1, int(len(self.board.correct_letters) * 0.2))
-        choices: list[str] = [c for c in self.board.correct_letters]
-        random.shuffle(choices)
-        for c in choices[:reveal_count]:
-            self.board.revealed.add(c)
-        self.board.update_display()
         self.tossup_paused = False
         if self._tossup_timer.isActive():
             self._tossup_timer.stop()

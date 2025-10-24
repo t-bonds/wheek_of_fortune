@@ -212,7 +212,7 @@ class BoardWidget(QtWidgets.QWidget):
     # ----- API-compatible methods (keep same signatures where possible) -----
     def load_puzzle(self, puzzle: Puzzle) -> None:
         self.puzzle = puzzle
-        self.revealed = set()
+        self.revealed.clear()
         # clear per-position reveals
         self._revealed_positions.clear()
 
